@@ -1,12 +1,28 @@
-dotenv = require('dotenv').config();
-var mysql = require('mysql');
+const mysql = require('mysql')
+const fs = require('fs')
+
+const configPath = 'conf.json';
+
+let config;
+
+try {
+  const configFile = fs.readFileSync(configPath, 'utf8');
+  config = JSON.parse(configFile);
+} catch (err) {
+  console.error('Error reading or parsing config file:', err);
+  process.exit(1);
+}
 
 const connection = mysql.createConnection({
-    host: process.env.HOST,
+    host: config.HOST,
+    user: config.USER,
+    password: config.PASSWORD,
+    database: config.DATABASE
+
+    /*host: process.env.HOST,
     user: process.env.USER,
-    port: process.env.PORT,
     password: process.env.PASSWORD,
-    database: process.env.DATABASE
+    database: process.env.DATABASE*/
   });
   
   connection.connect((err) => {
